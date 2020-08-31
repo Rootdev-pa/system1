@@ -16,7 +16,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
+Route::get('/roles', 'PermisoController@Permiso');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['middleware' => 'rol:admin'], function() {
+    Route::get('/permisos', 'PermisoController@index');
+    Route::get('/permiso', 'PermisoController@permisos');
+    Route::get('/editrol/{id}', 'PermisoController@editRol');
+
+ });
