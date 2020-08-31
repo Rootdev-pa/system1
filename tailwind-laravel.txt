@@ -1,0 +1,75 @@
+
+
+// 1. Instalacion del proyecto
+composer create-project --prefer-dist laravel/laravel nombre
+
+// 2. Instalacion del ui dentro del proyecto
+composer require laravel/ui
+
+// 3. Instalacion ui vue dentro del proyecto
+php artisan ui vue --auth
+
+// 4. Instalacion del tailwind dentro del proyecto
+npm install tailwindcss
+
+// 5. Eliminar en app.scss
+// Variables
+@import 'variables';
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+// 5.2 Agregar app.scss
+
+	//Esta por default @import url('https://fonts.googleapis.com/css?family=Nunito'); 
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+// 6. Eliminar en bootstrap.js
+try {
+    window.Popper = require('popper.js').default;
+    window.$ = window.jQuery = require('jquery');
+
+    require('bootstrap');
+} catch (e) {}
+
+// 7. Agregar en webpack.mix.js
+
+const mix = require('laravel-mix');
+const tailwindcss = require('tailwindcss')
+require('laravel-mix-purgecss');
+
+mix.js('resources/js/app.js', 'public/js')
+    .sass('resources/sass/app.scss', 'public/css')
+    .options({
+        processCssUrls: false,
+        postCss: [ tailwindcss('./tailwind.config.js') ],
+      }).purgeCss();
+
+// 7.1 Eliminar en package.json en "devDependencies":{"bootstrap": "version" y "popper.js": "version"}
+
+// 8. Inicializar taulwind
+npx tailwindcss init
+
+// 8.2 Instalar
+npm install laravel-mix-purgecss --save-dev
+
+// 8.3 Instalar el npm
+npm install
+
+// 8.4 Inicializar el npm
+npm run watch
+
+
+
+
+
+
+
+
+
+
+
+
+
