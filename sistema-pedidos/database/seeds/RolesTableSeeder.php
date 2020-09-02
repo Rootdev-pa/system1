@@ -17,13 +17,13 @@ class RolesTableSeeder extends Seeder
         
 		$admin_rol = new Rol();
 		$admin_rol->slug = 'admin';
-		$admin_rol->nombre = 'Administrador del sitema';
+		$admin_rol->descrip = 'Administrador del sitema';
 		$admin_rol->save();
 		$admin_rol->permisos()->attach($admin_permisos);
 
 		$superadmin_rol = new Rol();
 		$superadmin_rol->slug = 'superadmin';
-		$superadmin_rol->nombre = 'Superadmin del sistema';
+		$superadmin_rol->descrip = 'Superadmin del sistema';
 		$superadmin_rol->save();
 		$superadmin_rol->permisos()->attach($superadmin_permisos);
 
@@ -32,13 +32,13 @@ class RolesTableSeeder extends Seeder
 
 		$createTasks = new Permiso();
 		$createTasks->slug = 'crear-permiso';
-		$createTasks->nombre = 'Crear permiso';
+		$createTasks->descrip = 'Crear permiso';
 		$createTasks->save();
 		$createTasks->roles()->attach($admin_rol);
 
 		$editUsers = new Permiso();
 		$editUsers->slug = 'edit-users';
-		$editUsers->nombre = 'Editar Usuarios';
+		$editUsers->descrip = 'Editar Usuarios';
 		$editUsers->save();
 		$editUsers->roles()->attach($superadmin_rol);
 
@@ -49,7 +49,7 @@ class RolesTableSeeder extends Seeder
 
 		$admin = new User();
 		$admin->name = 'Juan Perez';
-		$admin->email = 'juan@gmail.com';
+		$admin->email = 'juan@juan.com';
 		$admin->password = bcrypt('123456789');
 		$admin->save();
 		$admin->roles()->attach($admin_rol);

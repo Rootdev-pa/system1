@@ -15,6 +15,12 @@ Vue.component('register', require('./components/Register.vue').default);
 //componente para listar permisos
 Vue.component('lista-permisos', require('./components/ListaPermisos.vue').default);
 
+//componente padre de los roles
+Vue.component('roles', require('./components/Roles.vue').default);
+
+//componente para listar los roles
+Vue.component('list-roles', require('./components/ListRoles.vue').default);
+
 
 const app = new Vue({
     el: '#app',
