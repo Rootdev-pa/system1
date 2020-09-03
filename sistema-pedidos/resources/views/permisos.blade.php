@@ -1,4 +1,4 @@
 @extends('layouts.app')
 @section('content')
-    <login/>
+    <permisos/>
 @endsection

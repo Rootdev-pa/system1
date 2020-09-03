@@ -2,13 +2,15 @@
 
 namespace App;
 
+use App\Permisos\HasPermisosTrait;
+
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable,HasPermisosTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -36,4 +38,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany('App\Rol','users_roles');
+    }
+
+    public function permisos()
+    {
+        return $this->belongsToMany('App\Permiso','users_permisos');
+    }
+
+    public function negocio()
+    {
+        return $this->hasMany('App\Negocio','users_negocios');
+    }
 }
+
