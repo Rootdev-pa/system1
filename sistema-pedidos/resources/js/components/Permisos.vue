@@ -2,17 +2,17 @@
     <div>
         <div class="container">
 
-            <form v-on:submit="createRol" id="contact-me"
+            <form v-on:submit="createPermiso" id="contact-me"
                 class="w-full mx-auto max-w-3xl bg-white shadow p-8 text-gray-700 ">
-                <h2 class="w-full my-2 text-3xl font-bold leading-tight my-5">Crear Rol</h2>
+                <h2 class="w-full my-2 text-3xl font-bold leading-tight my-5">Crear Permiso</h2>
                 <!-- name field -->
                 <div class="flex flex-wrap mb-6">
 
                     <div class="relative w-full appearance-none label-floating">
                         <input class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border
             border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500" id="slug" type="text"
-                            placeholder="Slug del rol" v-model="slug">
-                        <label for="name"
+                            placeholder="Slug del permiso" v-model="slug">
+                        <label for="slug"
                             class="absolute tracking-wide py-2 px-4 mb-4 opacity-0 leading-tight block top-0 left-0 cursor-text">
                             Slug
                         </label>
@@ -21,8 +21,8 @@
                     <div class="relative w-full appearance-none label-floating">
                         <input class="tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border
             border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500" id="descrip" type="text"
-                            placeholder="Descripción del rol" v-model="descrip">
-                        <label for="name"
+                            placeholder="Descripción del permiso" v-model="descrip">
+                        <label for="descrip"
                             class="absolute tracking-wide py-2 px-4 mb-4 opacity-0 leading-tight block top-0 left-0 cursor-text">
                             Nombre
                         </label>
@@ -37,15 +37,17 @@
                 </div>
             </form>
         </div>
-        <ListRoles/>
+        <ListPermisos/>
+
+        
     </div>
 </template>
 
 <script>
-    import ListRoles from './ListRoles'
+    import ListPermisos from './ListPermisos'
     export default {
         components: {
-            ListRoles
+            ListPermisos
         },
         data() {
             return {
@@ -54,8 +56,8 @@
             }
         },
         methods: {
-            createRol: function () {
-                var url = 'crear-rol';
+            createPermiso: function () {
+                var url = 'crear-permiso';
                 axios.post(url, {
                     slug: this.slug,
                     descrip: this.descrip
@@ -69,3 +71,4 @@
     }
 
 </script>
+

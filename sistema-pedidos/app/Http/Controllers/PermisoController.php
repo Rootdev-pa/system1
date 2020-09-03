@@ -12,57 +12,98 @@ class PermisoController extends Controller
     {
        $this->middleware('auth'); 
     }
-
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index(Request $request)
     {
         if ($request->user()->can('crear-permiso')) {
-            return view('ListaPermisos');
+            return view('permisos');
         }else{
             return redirect()->back();
-
         }
-
     }
-    
+
+    public function getPermisos (Request $request)
+    {
+        if ($request->user()->can('crear-permiso')) {
+            $permisos = Permiso::with('roles')->get();
+            $roles = Rol::all();
+
+            return response()->json(['permisos' => $permisos,'roles'=>$roles]);
+        }else{
+            return redirect()->back();
+        }
+    }
+
+            // foreach(json_decode($request->input('permiso')) as $per)
+        //     {
+        //         $permiso = Permiso::create([
+        //             'slug' => $per->slug,
+        //             'descrip' => $per->descrip,
+        //         ]);
+
+        //     }
+        // }else{
+        //     return redirect()->back();
+        // } 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
         if ($request->user()->can('crear-permiso')) {
-            //Code goes here
-        }
-    }
-    
-    public function destroy(Request $request, $id)
-    {   
-        if ($request->user()->can('delete-permiso')) {
-          //Code goes here
-        }
-    
-    }
 
-    public function permisos(Request $request)
-    {
-        if ($request->user()->can('crear-permiso')) {
-            $users = User::with(['roles','permisos'])->get();
-            $permisos = permiso::all();
-            return response()->json(['users' => $users, 'permisos' => $permisos]);
+        $this->validate($request,[
+            'descrip' => 'required',
+            'slug' => 'required'
+        ]);
+ 
+        $rol = Permiso::create([
+            'slug' => $request->slug,
+            'descrip' => $request->descrip,
+
+        ]);
         }else{
             return redirect()->back();
-        }
-
+        }    
     }
 
-    public function editrol(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
     {
         if ($request->user()->can('crear-permiso')) {
-            return Rol::find('user_id',$id)->get();
+
+            $permiso = Permiso::findOrFail($request->id);
+            $permiso->slug = $request->slug;
+            $permiso->descrip = $request->descrip;
+            $permiso->save();
         }else{
             return redirect()->back();
-        }
-
+        } 
     }
-    
-    public function Permiso()
-    {   
-        return redirect()->back();
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function destroy(Request $request)
+    {
+        $permiso = Permiso::findOrFail($request->id);
+        $permiso->delete();
     }
 }

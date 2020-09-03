@@ -13,8 +13,8 @@ class RolesTableSeeder extends Seeder
     public function run()
     {
         $admin_permisos = Permiso::where('slug','crear-permiso')->first();
-        $superadmin_permisos = Permiso::where('slug', 'edit-users')->first();
-        
+        $superadmin_users = Permiso::where('slug', 'edit-users')->first();
+
 		$admin_rol = new Rol();
 		$admin_rol->slug = 'admin';
 		$admin_rol->descrip = 'Administrador del sitema';
@@ -25,16 +25,16 @@ class RolesTableSeeder extends Seeder
 		$superadmin_rol->slug = 'superadmin';
 		$superadmin_rol->descrip = 'Superadmin del sistema';
 		$superadmin_rol->save();
-		$superadmin_rol->permisos()->attach($superadmin_permisos);
+		$superadmin_rol->permisos()->attach($superadmin_users);
 
 		$admin_rol = Rol::where('slug','admin')->first();
 		$superadmin_rol = Rol::where('slug', 'superadmin')->first();
 
-		$createTasks = new Permiso();
-		$createTasks->slug = 'crear-permiso';
-		$createTasks->descrip = 'Crear permiso';
-		$createTasks->save();
-		$createTasks->roles()->attach($admin_rol);
+		$createPermisos = new Permiso();
+		$createPermisos->slug = 'crear-permiso';
+		$createPermisos->descrip = 'Crear permiso';
+		$createPermisos->save();
+		$createPermisos->roles()->attach($admin_rol);
 
 		$editUsers = new Permiso();
 		$editUsers->slug = 'edit-users';

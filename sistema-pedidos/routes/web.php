@@ -21,16 +21,19 @@ Route::get('/home', 'HomeController@index')->name('home');
 Auth::routes();
 
 Route::group(['middleware' => 'rol:admin'], function() {
-    Route::get('/permisos', 'PermisoController@index');
-    Route::get('/permiso', 'PermisoController@permisos');
-    Route::get('/editrol/{id}', 'PermisoController@editRol');
 
+    //Roles
     Route::get('/roles', 'RolController@index');
     Route::get('/getroles', 'RolController@getRoles');
     Route::post('/crear-rol', 'RolController@store');
-
     Route::post('/rol/actualizar', 'RolController@update');
     Route::post('/rol/borrar', 'RolController@destroy');
 
+    //Permisos
+    Route::get('/permisos', 'PermisoController@index');
+    Route::get('/getpermisos', 'PermisoController@getPermisos');
+    Route::post('/crear-permiso', 'PermisoController@store');
+    Route::post('/permiso/actualizar', 'PermisoController@update');
+    Route::post('/permiso/borrar', 'PermisoController@destroy');
 
  });
