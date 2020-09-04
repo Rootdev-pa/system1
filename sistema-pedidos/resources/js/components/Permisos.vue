@@ -2,7 +2,7 @@
     <div>
         <div class="container">
 
-            <form v-on:submit="createPermiso" id="contact-me"
+            <form v-on:submit.prevent="createPermiso" id="contact-me"
                 class="w-full mx-auto max-w-3xl bg-white shadow p-8 text-gray-700 ">
                 <h2 class="w-full my-2 text-3xl font-bold leading-tight my-5">Crear Permiso</h2>
                 <!-- name field -->
@@ -27,6 +27,19 @@
                             Nombre
                         </label>
                     </div>
+
+                        <div v-for="rols in roles" :key="rols.index">
+                            <div>
+                                <input type="checkbox" name="check[]"
+                                v-bind:id="rols.id" :value="rols.id" 
+                                v-model="checkRol">
+
+                                <!-- <input type="checkbox"
+                                :value="rols.id" v-model="checkRol" number>-->
+                                <span>{{rols.slug}} </span> 
+                                <br>
+                            </div>
+                        </div>
                 </div>
                 <div class="">
                     <button
@@ -53,17 +66,36 @@
             return {
                 slug: '',
                 descrip: '',
+                checkRol:[],
+                roles:[],
+                check:[],
+
+
             }
         },
+        created() {
+            this.getPermisos();
+        },
         methods: {
+            getPermisos: function () {
+                var urlIdeas = 'getpermisos';
+                axios.get(urlIdeas).then(response => {
+                    this.permisos = response.data.permisos
+                    this.roles = response.data.roles
+                });
+            },
             createPermiso: function () {
                 var url = 'crear-permiso';
                 axios.post(url, {
                     slug: this.slug,
-                    descrip: this.descrip
+                    descrip: this.descrip,
+                    rol: this.checkRol,
+                    
                 }).then(response => {
                     this.slug = '';
                     this.descrip = '';
+                    // console.log({rol: JSON.stringify(this.checkRol)})
+
                 });
             },
         },

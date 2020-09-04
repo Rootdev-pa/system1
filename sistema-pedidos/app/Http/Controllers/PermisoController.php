@@ -64,11 +64,13 @@ class PermisoController extends Controller
             'slug' => 'required'
         ]);
  
-        $rol = Permiso::create([
+        $permiso = Permiso::create([
             'slug' => $request->slug,
             'descrip' => $request->descrip,
-
         ]);
+
+            $permiso->roles()->attach($request->rol);
+
         }else{
             return redirect()->back();
         }    
@@ -89,6 +91,10 @@ class PermisoController extends Controller
             $permiso->slug = $request->slug;
             $permiso->descrip = $request->descrip;
             $permiso->save();
+            // $rol = Rol::where('slug',$request->roles)->get();
+            // dd($request->roles);
+            $permiso->roles()->sync($request->roles);
+
         }else{
             return redirect()->back();
         } 

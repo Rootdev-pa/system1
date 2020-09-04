@@ -2055,8 +2055,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2065,7 +2063,8 @@ __webpack_require__.r(__webpack_exports__);
       slug: '',
       permisos: [],
       checkRol: [],
-      roles: []
+      roles: [],
+      currentRole: null
     };
   },
   created: function created() {
@@ -2098,11 +2097,16 @@ __webpack_require__.r(__webpack_exports__);
         id: permiso.id,
         slug: permiso.slug,
         descrip: permiso.descrip,
-        roles: permiso.checkRol
+        roles: this.checkRol
       }).then(function (response) {
-        console.log({
-          'check': _this3.checkRol
-        });
+        console.log(_this3.checkRol);
+      });
+    },
+    uP: function uP(permiso) {
+      this.editmode = false;
+      this.currentRole = permiso;
+      this.checkRol = _.map(permiso.roles, function (rol) {
+        return rol.id;
       });
     }
   }
@@ -2466,6 +2470,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2474,20 +2491,36 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       slug: '',
-      descrip: ''
+      descrip: '',
+      checkRol: [],
+      roles: [],
+      check: []
     };
   },
+  created: function created() {
+    this.getPermisos();
+  },
   methods: {
-    createPermiso: function createPermiso() {
+    getPermisos: function getPermisos() {
       var _this = this;
+
+      var urlIdeas = 'getpermisos';
+      axios.get(urlIdeas).then(function (response) {
+        _this.permisos = response.data.permisos;
+        _this.roles = response.data.roles;
+      });
+    },
+    createPermiso: function createPermiso() {
+      var _this2 = this;
 
       var url = 'crear-permiso';
       axios.post(url, {
         slug: this.slug,
-        descrip: this.descrip
+        descrip: this.descrip,
+        rol: this.checkRol
       }).then(function (response) {
-        _this.slug = '';
-        _this.descrip = '';
+        _this2.slug = '';
+        _this2.descrip = ''; // console.log({rol: JSON.stringify(this.checkRol)})
       });
     }
   }
@@ -20362,443 +20395,345 @@ var render = function() {
             _c(
               "tbody",
               _vm._l(_vm.permisos, function(permiso) {
-                return _c(
-                  "tr",
-                  { key: permiso.id },
-                  [
-                    _c("td", { staticClass: "border px-4 py-2" }, [
-                      _vm.editmode == false || _vm.editmode != permiso.id
-                        ? _c("span", [_vm._v(_vm._s(permiso.slug))])
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.editmode == permiso.id
-                        ? _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: permiso.slug,
-                                expression: "permiso.slug"
-                              }
-                            ],
-                            staticClass:
-                              "tracking-wide py-2 px-4 leading-relaxed appearance-none block w-full bg-gray-200 border\n                            border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500",
-                            attrs: { type: "text" },
-                            domProps: { value: permiso.slug },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(permiso, "slug", $event.target.value)
-                              }
+                return _c("tr", { key: permiso.id }, [
+                  _c("td", { staticClass: "border px-4 py-2" }, [
+                    _vm.editmode == false || _vm.editmode != permiso.id
+                      ? _c("a", [_vm._v(_vm._s(permiso.slug))])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editmode == permiso.id
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: permiso.slug,
+                              expression: "permiso.slug"
                             }
-                          })
-                        : _vm._e()
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "border px-4 py-2" }, [
-                      _vm.editmode == false || _vm.editmode != permiso.id
-                        ? _c("span", [_vm._v(_vm._s(permiso.descrip))])
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.editmode == permiso.id
-                        ? _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: permiso.descrip,
-                                expression: "permiso.descrip"
+                          ],
+                          staticClass:
+                            "tracking-wide py-2 px-4 leading-relaxed appearance-none block w-full bg-white border\n                            border-black rounded focus:outline-none focus:bg-white focus:border-gray-500",
+                          attrs: { type: "text" },
+                          domProps: { value: permiso.slug },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
                               }
-                            ],
-                            staticClass:
-                              "tracking-wide py-2 px-4 leading-relaxed appearance-none block w-full bg-gray-200 border\n                            border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500",
-                            attrs: { type: "text" },
-                            domProps: { value: permiso.descrip },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  permiso,
-                                  "descrip",
-                                  $event.target.value
-                                )
-                              }
+                              _vm.$set(permiso, "slug", $event.target.value)
                             }
-                          })
-                        : _vm._e()
-                    ]),
+                          }
+                        })
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "border px-4 py-2" }, [
+                    _vm.editmode == false || _vm.editmode != permiso.id
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: permiso.descrip,
+                              expression: "permiso.descrip"
+                            }
+                          ],
+                          staticClass:
+                            "tracking-wide py-2 px-4 leading-relaxed appearance-none block w-full bg-gray-200 border\n                            border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500",
+                          domProps: { value: permiso.descrip },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(permiso, "descrip", $event.target.value)
+                            }
+                          }
+                        })
+                      : _vm._e(),
                     _vm._v(" "),
-                    _vm._l(permiso.roles, function(rol) {
-                      return _c(
-                        "td",
-                        { key: rol.id, staticClass: "border px-4 py-2" },
-                        [
-                          _vm.editmode == false || _vm.editmode != permiso.id
-                            ? _c("span", [_vm._v(_vm._s(rol.slug))])
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _vm.editmode == permiso.id
-                            ? _c(
-                                "div",
-                                _vm._l(_vm.roles, function(rols) {
-                                  return _c("div", { key: rols.id }, [
-                                    rol.slug == rols.slug
-                                      ? _c("div", [
-                                          _c("input", {
-                                            directives: [
-                                              {
-                                                name: "model",
-                                                rawName: "v-model",
-                                                value: _vm.checkRol[rols.id],
-                                                expression: "checkRol[rols.id]"
-                                              }
-                                            ],
-                                            attrs: {
-                                              type: "checkbox",
-                                              name: "check[]",
-                                              checked: ""
-                                            },
-                                            domProps: {
-                                              value: rol.id,
-                                              checked: Array.isArray(
-                                                _vm.checkRol[rols.id]
-                                              )
-                                                ? _vm._i(
-                                                    _vm.checkRol[rols.id],
-                                                    rol.id
-                                                  ) > -1
-                                                : _vm.checkRol[rols.id]
-                                            },
-                                            on: {
-                                              change: function($event) {
-                                                var $$a = _vm.checkRol[rols.id],
-                                                  $$el = $event.target,
-                                                  $$c = $$el.checked
-                                                    ? true
-                                                    : false
-                                                if (Array.isArray($$a)) {
-                                                  var $$v = rol.id,
-                                                    $$i = _vm._i($$a, $$v)
-                                                  if ($$el.checked) {
-                                                    $$i < 0 &&
-                                                      _vm.$set(
-                                                        _vm.checkRol,
-                                                        rols.id,
-                                                        $$a.concat([$$v])
-                                                      )
-                                                  } else {
-                                                    $$i > -1 &&
-                                                      _vm.$set(
-                                                        _vm.checkRol,
-                                                        rols.id,
-                                                        $$a
-                                                          .slice(0, $$i)
-                                                          .concat(
-                                                            $$a.slice($$i + 1)
-                                                          )
-                                                      )
-                                                  }
-                                                } else {
-                                                  _vm.$set(
-                                                    _vm.checkRol,
-                                                    rols.id,
-                                                    $$c
-                                                  )
-                                                }
-                                              }
-                                            }
-                                          }),
-                                          _vm._v(
-                                            " " +
-                                              _vm._s(rols.slug) +
-                                              "\n                                "
-                                          )
-                                        ])
-                                      : _vm._e(),
-                                    _vm._v(" "),
-                                    rol.slug != rols.slug
-                                      ? _c("div", [
-                                          _c("input", {
-                                            directives: [
-                                              {
-                                                name: "model",
-                                                rawName: "v-model",
-                                                value: _vm.checkRol[rols.id],
-                                                expression: "checkRol[rols.id]"
-                                              }
-                                            ],
-                                            attrs: {
-                                              type: "checkbox",
-                                              name: "check[]"
-                                            },
-                                            domProps: {
-                                              value: rol.id,
-                                              checked: Array.isArray(
-                                                _vm.checkRol[rols.id]
-                                              )
-                                                ? _vm._i(
-                                                    _vm.checkRol[rols.id],
-                                                    rol.id
-                                                  ) > -1
-                                                : _vm.checkRol[rols.id]
-                                            },
-                                            on: {
-                                              change: function($event) {
-                                                var $$a = _vm.checkRol[rols.id],
-                                                  $$el = $event.target,
-                                                  $$c = $$el.checked
-                                                    ? true
-                                                    : false
-                                                if (Array.isArray($$a)) {
-                                                  var $$v = rol.id,
-                                                    $$i = _vm._i($$a, $$v)
-                                                  if ($$el.checked) {
-                                                    $$i < 0 &&
-                                                      _vm.$set(
-                                                        _vm.checkRol,
-                                                        rols.id,
-                                                        $$a.concat([$$v])
-                                                      )
-                                                  } else {
-                                                    $$i > -1 &&
-                                                      _vm.$set(
-                                                        _vm.checkRol,
-                                                        rols.id,
-                                                        $$a
-                                                          .slice(0, $$i)
-                                                          .concat(
-                                                            $$a.slice($$i + 1)
-                                                          )
-                                                      )
-                                                  }
-                                                } else {
-                                                  _vm.$set(
-                                                    _vm.checkRol,
-                                                    rols.id,
-                                                    $$c
-                                                  )
-                                                }
-                                              }
-                                            }
-                                          }),
-                                          _vm._v(
-                                            " " +
-                                              _vm._s(rols.slug) +
-                                              "\n                                    "
-                                          )
-                                        ])
-                                      : _vm._e()
-                                  ])
-                                }),
-                                0
-                              )
-                            : _vm._e()
-                        ]
-                      )
-                    }),
-                    _vm._v(" "),
-                    _c("div", [
-                      _c("td", { staticClass: "border px-4 py-2" }, [
-                        _c(
+                    _vm.editmode == permiso.id
+                      ? _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: permiso.descrip,
+                              expression: "permiso.descrip"
+                            }
+                          ],
+                          staticClass:
+                            "tracking-wide py-2 px-4 leading-relaxed appearance-none block w-full bg-withe border\n                            border-black rounded focus:outline-none focus:bg-white focus:border-gray-500",
+                          attrs: { type: "text" },
+                          domProps: { value: permiso.descrip },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(permiso, "descrip", $event.target.value)
+                            }
+                          }
+                        })
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "border px-4 py-2" }, [
+                    _vm.editmode == false || _vm.editmode != permiso.id
+                      ? _c(
                           "div",
+                          _vm._l(permiso.roles, function(rols) {
+                            return _c("div", { key: rols.id }, [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(rols.slug) +
+                                  " \n                            "
+                              )
+                            ])
+                          }),
+                          0
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.editmode == permiso.id
+                      ? _c(
+                          "div",
+                          _vm._l(_vm.roles, function(rols) {
+                            return _c("div", { key: rols.id }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.checkRol,
+                                    expression: "checkRol"
+                                  }
+                                ],
+                                attrs: { type: "checkbox", id: rols.id },
+                                domProps: {
+                                  value: rols.id,
+                                  checked: Array.isArray(_vm.checkRol)
+                                    ? _vm._i(_vm.checkRol, rols.id) > -1
+                                    : _vm.checkRol
+                                },
+                                on: {
+                                  change: function($event) {
+                                    var $$a = _vm.checkRol,
+                                      $$el = $event.target,
+                                      $$c = $$el.checked ? true : false
+                                    if (Array.isArray($$a)) {
+                                      var $$v = rols.id,
+                                        $$i = _vm._i($$a, $$v)
+                                      if ($$el.checked) {
+                                        $$i < 0 &&
+                                          (_vm.checkRol = $$a.concat([$$v]))
+                                      } else {
+                                        $$i > -1 &&
+                                          (_vm.checkRol = $$a
+                                            .slice(0, $$i)
+                                            .concat($$a.slice($$i + 1)))
+                                      }
+                                    } else {
+                                      _vm.checkRol = $$c
+                                    }
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("span", [_vm._v(_vm._s(rols.slug))])
+                            ])
+                          }),
+                          0
+                        )
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("div", [
+                    _c("td", { staticClass: "border px-4 py-2" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "ml-auto mr-2 d-flex align-items-center"
+                        },
+                        [
+                          _c("span", [
+                            _vm.editmode != permiso.id
+                              ? _c(
+                                  "svg",
+                                  {
+                                    staticClass:
+                                      "icon icon-tabler icon-tabler-edit",
+                                    attrs: {
+                                      xmlns: "http://www.w3.org/2000/svg",
+                                      width: "32",
+                                      height: "32",
+                                      viewBox: "0 0 24 24",
+                                      "stroke-width": "1.5",
+                                      stroke: "#2196F3",
+                                      fill: "none",
+                                      "stroke-linecap": "round",
+                                      "stroke-linejoin": "round"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        _vm.uP(permiso)
+                                        _vm.editmode = permiso.id
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("path", {
+                                      attrs: {
+                                        stroke: "none",
+                                        d: "M0 0h24v24H0z"
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("path", {
+                                      attrs: {
+                                        d:
+                                          "M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("path", {
+                                      attrs: {
+                                        d:
+                                          "M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("line", {
+                                      attrs: {
+                                        x1: "16",
+                                        y1: "5",
+                                        x2: "19",
+                                        y2: "8"
+                                      }
+                                    })
+                                  ]
+                                )
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.editmode == permiso.id
+                              ? _c(
+                                  "svg",
+                                  {
+                                    staticClass:
+                                      "icon icon-tabler icon-tabler-edit",
+                                    attrs: {
+                                      xmlns: "http://www.w3.org/2000/svg",
+                                      width: "32",
+                                      height: "32",
+                                      viewBox: "0 0 24 24",
+                                      "stroke-width": "1.5",
+                                      stroke: "#9E9E9E",
+                                      fill: "none",
+                                      "stroke-linecap": "round",
+                                      "stroke-linejoin": "round"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.updatePermiso(permiso)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("path", {
+                                      attrs: {
+                                        stroke: "none",
+                                        d: "M0 0h24v24H0z"
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("path", {
+                                      attrs: {
+                                        d:
+                                          "M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("path", {
+                                      attrs: {
+                                        d:
+                                          "M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("line", {
+                                      attrs: {
+                                        x1: "16",
+                                        y1: "5",
+                                        x2: "19",
+                                        y2: "8"
+                                      }
+                                    })
+                                  ]
+                                )
+                              : _vm._e()
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("span", [
+                        _c(
+                          "svg",
                           {
-                            staticClass:
-                              "ml-auto mr-2 d-flex align-items-center"
+                            staticClass: "icon icon-tabler icon-tabler-trash",
+                            attrs: {
+                              xmlns: "http://www.w3.org/2000/svg",
+                              width: "32",
+                              height: "32",
+                              viewBox: "0 0 24 24",
+                              "stroke-width": "1.5",
+                              stroke: "#E91E63",
+                              fill: "none",
+                              "stroke-linecap": "round",
+                              "stroke-linejoin": "round"
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.deletePermiso(permiso)
+                              }
+                            }
                           },
                           [
-                            _c("span", [
-                              _vm.editmode != permiso.id
-                                ? _c(
-                                    "svg",
-                                    {
-                                      staticClass:
-                                        "icon icon-tabler icon-tabler-edit",
-                                      attrs: {
-                                        xmlns: "http://www.w3.org/2000/svg",
-                                        width: "32",
-                                        height: "32",
-                                        viewBox: "0 0 24 24",
-                                        "stroke-width": "1.5",
-                                        stroke: "#2196F3",
-                                        fill: "none",
-                                        "stroke-linecap": "round",
-                                        "stroke-linejoin": "round"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          _vm.editmode = permiso.id
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c("path", {
-                                        attrs: {
-                                          stroke: "none",
-                                          d: "M0 0h24v24H0z"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("path", {
-                                        attrs: {
-                                          d:
-                                            "M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("path", {
-                                        attrs: {
-                                          d:
-                                            "M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("line", {
-                                        attrs: {
-                                          x1: "16",
-                                          y1: "5",
-                                          x2: "19",
-                                          y2: "8"
-                                        }
-                                      })
-                                    ]
-                                  )
-                                : _vm._e(),
-                              _vm._v(" "),
-                              _vm.editmode == permiso.id
-                                ? _c(
-                                    "svg",
-                                    {
-                                      staticClass:
-                                        "icon icon-tabler icon-tabler-edit",
-                                      attrs: {
-                                        xmlns: "http://www.w3.org/2000/svg",
-                                        width: "32",
-                                        height: "32",
-                                        viewBox: "0 0 24 24",
-                                        "stroke-width": "1.5",
-                                        stroke: "#9E9E9E",
-                                        fill: "none",
-                                        "stroke-linecap": "round",
-                                        "stroke-linejoin": "round"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.updatePermiso(permiso)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c("path", {
-                                        attrs: {
-                                          stroke: "none",
-                                          d: "M0 0h24v24H0z"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("path", {
-                                        attrs: {
-                                          d:
-                                            "M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("path", {
-                                        attrs: {
-                                          d:
-                                            "M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("line", {
-                                        attrs: {
-                                          x1: "16",
-                                          y1: "5",
-                                          x2: "19",
-                                          y2: "8"
-                                        }
-                                      })
-                                    ]
-                                  )
-                                : _vm._e()
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c("span", [
-                          _c(
-                            "svg",
-                            {
-                              staticClass: "icon icon-tabler icon-tabler-trash",
+                            _c("path", {
+                              attrs: { stroke: "none", d: "M0 0h24v24H0z" }
+                            }),
+                            _vm._v(" "),
+                            _c("line", {
+                              attrs: { x1: "4", y1: "7", x2: "20", y2: "7" }
+                            }),
+                            _vm._v(" "),
+                            _c("line", {
+                              attrs: { x1: "10", y1: "11", x2: "10", y2: "17" }
+                            }),
+                            _vm._v(" "),
+                            _c("line", {
+                              attrs: { x1: "14", y1: "11", x2: "14", y2: "17" }
+                            }),
+                            _vm._v(" "),
+                            _c("path", {
                               attrs: {
-                                xmlns: "http://www.w3.org/2000/svg",
-                                width: "32",
-                                height: "32",
-                                viewBox: "0 0 24 24",
-                                "stroke-width": "1.5",
-                                stroke: "#E91E63",
-                                fill: "none",
-                                "stroke-linecap": "round",
-                                "stroke-linejoin": "round"
-                              },
-                              on: {
-                                click: function($event) {
-                                  return _vm.deletePermiso(permiso)
-                                }
+                                d:
+                                  "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
                               }
-                            },
-                            [
-                              _c("path", {
-                                attrs: { stroke: "none", d: "M0 0h24v24H0z" }
-                              }),
-                              _vm._v(" "),
-                              _c("line", {
-                                attrs: { x1: "4", y1: "7", x2: "20", y2: "7" }
-                              }),
-                              _vm._v(" "),
-                              _c("line", {
-                                attrs: {
-                                  x1: "10",
-                                  y1: "11",
-                                  x2: "10",
-                                  y2: "17"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("line", {
-                                attrs: {
-                                  x1: "14",
-                                  y1: "11",
-                                  x2: "14",
-                                  y2: "17"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("path", {
-                                attrs: {
-                                  d:
-                                    "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("path", {
-                                attrs: {
-                                  d: "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
-                                }
-                              })
-                            ]
-                          )
-                        ])
+                            }),
+                            _vm._v(" "),
+                            _c("path", {
+                              attrs: {
+                                d: "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
+                              }
+                            })
+                          ]
+                        )
                       ])
-                    ]),
-                    _vm._v(" "),
-                    _c("td")
-                  ],
-                  2
-                )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("td")
+                ])
               }),
               0
             )
@@ -21505,7 +21440,12 @@ var render = function() {
             staticClass:
               "w-full mx-auto max-w-3xl bg-white shadow p-8 text-gray-700 ",
             attrs: { id: "contact-me" },
-            on: { submit: _vm.createPermiso }
+            on: {
+              submit: function($event) {
+                $event.preventDefault()
+                return _vm.createPermiso($event)
+              }
+            }
           },
           [
             _c(
@@ -21516,105 +21456,165 @@ var render = function() {
               [_vm._v("Crear Permiso")]
             ),
             _vm._v(" "),
-            _c("div", { staticClass: "flex flex-wrap mb-6" }, [
-              _c(
-                "div",
-                {
-                  staticClass: "relative w-full appearance-none label-floating"
-                },
-                [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.slug,
-                        expression: "slug"
-                      }
-                    ],
+            _c(
+              "div",
+              { staticClass: "flex flex-wrap mb-6" },
+              [
+                _c(
+                  "div",
+                  {
                     staticClass:
-                      "tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border\n        border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500",
-                    attrs: {
-                      id: "slug",
-                      type: "text",
-                      placeholder: "Slug del permiso"
-                    },
-                    domProps: { value: _vm.slug },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                      "relative w-full appearance-none label-floating"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.slug,
+                          expression: "slug"
                         }
-                        _vm.slug = $event.target.value
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "label",
-                    {
+                      ],
                       staticClass:
-                        "absolute tracking-wide py-2 px-4 mb-4 opacity-0 leading-tight block top-0 left-0 cursor-text",
-                      attrs: { for: "slug" }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        Slug\n                    "
-                      )
-                    ]
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "relative w-full appearance-none label-floating"
-                },
-                [
-                  _c("input", {
-                    directives: [
+                        "tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border\n        border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500",
+                      attrs: {
+                        id: "slug",
+                        type: "text",
+                        placeholder: "Slug del permiso"
+                      },
+                      domProps: { value: _vm.slug },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.slug = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
                       {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.descrip,
-                        expression: "descrip"
-                      }
-                    ],
+                        staticClass:
+                          "absolute tracking-wide py-2 px-4 mb-4 opacity-0 leading-tight block top-0 left-0 cursor-text",
+                        attrs: { for: "slug" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Slug\n                    "
+                        )
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
                     staticClass:
-                      "tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border\n        border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500",
-                    attrs: {
-                      id: "descrip",
-                      type: "text",
-                      placeholder: "Descripción del permiso"
-                    },
-                    domProps: { value: _vm.descrip },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
+                      "relative w-full appearance-none label-floating"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.descrip,
+                          expression: "descrip"
                         }
-                        _vm.descrip = $event.target.value
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "label",
-                    {
+                      ],
                       staticClass:
-                        "absolute tracking-wide py-2 px-4 mb-4 opacity-0 leading-tight block top-0 left-0 cursor-text",
-                      attrs: { for: "descrip" }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        Nombre\n                    "
-                      )
-                    ]
-                  )
-                ]
-              )
-            ]),
+                        "tracking-wide py-2 px-4 mb-3 leading-relaxed appearance-none block w-full bg-gray-200 border\n        border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500",
+                      attrs: {
+                        id: "descrip",
+                        type: "text",
+                        placeholder: "Descripción del permiso"
+                      },
+                      domProps: { value: _vm.descrip },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.descrip = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass:
+                          "absolute tracking-wide py-2 px-4 mb-4 opacity-0 leading-tight block top-0 left-0 cursor-text",
+                        attrs: { for: "descrip" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Nombre\n                    "
+                        )
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.roles, function(rols) {
+                  return _c("div", { key: rols.index }, [
+                    _c("div", [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.checkRol,
+                            expression: "checkRol"
+                          }
+                        ],
+                        attrs: {
+                          type: "checkbox",
+                          name: "check[]",
+                          id: rols.id
+                        },
+                        domProps: {
+                          value: rols.id,
+                          checked: Array.isArray(_vm.checkRol)
+                            ? _vm._i(_vm.checkRol, rols.id) > -1
+                            : _vm.checkRol
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.checkRol,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = rols.id,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 && (_vm.checkRol = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.checkRol = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
+                            } else {
+                              _vm.checkRol = $$c
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("span", [_vm._v(_vm._s(rols.slug) + " ")]),
+                      _vm._v(" "),
+                      _c("br")
+                    ])
+                  ])
+                })
+              ],
+              2
+            ),
             _vm._v(" "),
             _vm._m(0)
           ]
@@ -34316,14 +34316,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!**************************************************!*\
   !*** ./resources/js/components/ListPermisos.vue ***!
   \**************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ListPermisos_vue_vue_type_template_id_2b988027___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ListPermisos.vue?vue&type=template&id=2b988027& */ "./resources/js/components/ListPermisos.vue?vue&type=template&id=2b988027&");
 /* harmony import */ var _ListPermisos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ListPermisos.vue?vue&type=script&lang=js& */ "./resources/js/components/ListPermisos.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _ListPermisos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _ListPermisos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -34353,7 +34354,7 @@ component.options.__file = "resources/js/components/ListPermisos.vue"
 /*!***************************************************************************!*\
   !*** ./resources/js/components/ListPermisos.vue?vue&type=script&lang=js& ***!
   \***************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

@@ -17,18 +17,19 @@
 
                             <!-- slug -->
                             <td class="border px-4 py-2">
-                                <span v-if="editmode ==false || editmode != permiso.id">{{permiso.slug}}</span>
-                                <input class="tracking-wide py-2 px-4 leading-relaxed appearance-none block w-full bg-gray-200 border
-                                border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500" 
+                                <a v-if="editmode == false || editmode != permiso.id">{{permiso.slug}}</a>
+                                <input class="tracking-wide py-2 px-4 leading-relaxed appearance-none block w-full bg-white border
+                                border-black rounded focus:outline-none focus:bg-white focus:border-gray-500" 
                                     v-if="editmode == permiso.id"
                                     v-model="permiso.slug" type="text">
                             </td>
 
                             <!-- descripcion -->
                             <td class="border px-4 py-2">
-                                <span v-if="editmode ==false || editmode != permiso.id">{{permiso.descrip}}</span>
                                 <input class="tracking-wide py-2 px-4 leading-relaxed appearance-none block w-full bg-gray-200 border
-                                border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500" 
+                                border-gray-200 rounded focus:outline-none focus:bg-white focus:border-gray-500" v-if="editmode == false || editmode != permiso.id" v-model="permiso.descrip"/>
+                                <input class="tracking-wide py-2 px-4 leading-relaxed appearance-none block w-full bg-withe border
+                                border-black rounded focus:outline-none focus:bg-white focus:border-gray-500" 
                                 v-if="editmode == permiso.id"
                                 v-model="permiso.descrip" type="text">
                             </td>
@@ -36,36 +37,33 @@
                             <!-- relacion del permiso con los roles -->
                             <!-- ciclo for de la relacion roles
                             v-if="editmode == permiso.id" -->
+                            <td class="border px-4 py-2">
 
-                            <td class="border px-4 py-2" v-for="rol in permiso.roles" :key="rol.id">
-                            <span v-if="editmode ==false || editmode != permiso.id">{{rol.slug}}</span>
-
-                            <div v-if="editmode == permiso.id" >
-
-                                <div v-for="rols in roles" :key="rols.id">
-                                    <div v-if="rol.slug == rols.slug" >
-                                            <input type="checkbox" name="check[]"
-                                            v-model="checkRol[rols.id]"
-                                            :value="rol.id" checked> {{rols.slug}}
-                                    </div>
-                                    <div v-if="rol.slug != rols.slug" >
-                                            <input type="checkbox" name="check[]"
-                                            v-model="checkRol[rols.id]"
-                                            :value="rol.id"> {{rols.slug}}
-                                        <!-- <input type="checkbox" name="check[]" :value="rols.id" v-model="checkRol[rols.id]" :checked="true">
-                                        {{rols.slug}} -->
-                                    </div>
+                            <div v-if="editmode ==false || editmode != permiso.id">
+                                <div  v-for="rols in permiso.roles" :key="rols.id">
+                                    {{rols.slug}} 
                                 </div>
+                            </div>   
 
+
+                            <div  v-if="editmode == permiso.id">
+                                <div  v-for="rols in roles" :key="rols.id">
+
+                                    <input type="checkbox"
+                                    v-bind:id="rols.id"
+                                    v-bind:value="rols.id"
+                                    v-model="checkRol">                                    
+                                    <span >{{rols.slug}}</span>
+
+                                </div>
                             </div>
-
                             </td>
 
                             <div>
                                 <td class="border px-4 py-2">
                                     <div class="ml-auto mr-2 d-flex align-items-center">
                                         <span>
-                                            <svg v-on:click="editmode = permiso.id" v-if="editmode != permiso.id"
+                                            <svg v-on:click="uP(permiso); editmode = permiso.id" v-if="editmode != permiso.id"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 class="icon icon-tabler icon-tabler-edit" width="32" height="32"
                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="#2196F3" fill="none"
@@ -124,6 +122,7 @@
                 permisos: [],
                 checkRol: [],
                 roles: [],
+                currentRole: null,
 
             }
         },
@@ -151,11 +150,18 @@
                     id: permiso.id,
                     slug: permiso.slug,
                     descrip: permiso.descrip,
-                    roles: permiso.checkRol,
+                    roles: this.checkRol,
                     }).then(response => {
-                    console.log({'check':this.checkRol})
+                    console.log(this.checkRol)
                 });
             },
+            uP: function(permiso) {
+                this.editmode = false
+                this.currentRole = permiso;
+                this.checkRol = _.map(permiso.roles, function(rol) {
+                return rol.id;
+            });
+            }
         },
     }
 
