@@ -27,6 +27,20 @@
                             Nombre
                         </label>
                     </div>
+
+                        <div v-for="permiso in permisos" :key="permiso.index">
+                            <div>
+                                <input type="checkbox" name="check[]"
+                                v-bind:id="permiso.id" :value="permiso.id" 
+                                v-model="checkPerm">
+
+                                <!-- <input type="checkbox"
+                                :value="rols.id" v-model="checkRol" number>-->
+                                <span>{{permiso.slug}} </span> 
+                                <br>
+                            </div>
+                        </div>
+
                 </div>
                 <div class="">
                     <button
@@ -51,14 +65,27 @@
             return {
                 slug: '',
                 descrip: '',
+                checkPerm:[],
+                permisos:[],
+                check:[],
             }
         },
+        created() {
+            this.getRoles();
+        },
         methods: {
+            getRoles: function () {
+                var urlIdeas = 'getroles';
+                axios.get(urlIdeas).then(response => {
+                    this.permisos = response.data.permisos
+                });
+            },
             createRol: function () {
                 var url = 'crear-rol';
                 axios.post(url, {
                     slug: this.slug,
-                    descrip: this.descrip
+                    descrip: this.descrip,
+                    permisos: this.checkPerm,
                 }).then(response => {
                     this.slug = '';
                     this.descrip = '';

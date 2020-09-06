@@ -19,7 +19,7 @@ class PermisoController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->can('crear-permiso')) {
+        if ($request->user()->can('ver-permisos')) {
             return view('permisos');
         }else{
             return redirect()->back();
@@ -28,7 +28,7 @@ class PermisoController extends Controller
 
     public function getPermisos (Request $request)
     {
-        if ($request->user()->can('crear-permiso')) {
+        if ($request->user()->can('ver-permisos')) {
             $permisos = Permiso::with('roles')->get();
             $roles = Rol::all();
 
@@ -57,7 +57,7 @@ class PermisoController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->user()->can('crear-permiso')) {
+        if ($request->user()->can('crear-permisos')) {
 
         $this->validate($request,[
             'descrip' => 'required',
@@ -85,7 +85,7 @@ class PermisoController extends Controller
      */
     public function update(Request $request)
     {
-        if ($request->user()->can('crear-permiso')) {
+        if ($request->user()->can('actualizar-permisos')) {
 
             $permiso = Permiso::findOrFail($request->id);
             $permiso->slug = $request->slug;
@@ -109,7 +109,9 @@ class PermisoController extends Controller
 
     public function destroy(Request $request)
     {
+        if ($request->user()->can('eliminar-permisos')) {
         $permiso = Permiso::findOrFail($request->id);
         $permiso->delete();
+        }
     }
 }

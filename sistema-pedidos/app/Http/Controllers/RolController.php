@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Rol;
+use App\Permiso;
 use Illuminate\Http\Request;
 
 class RolController extends Controller
@@ -17,7 +18,7 @@ class RolController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->can('crear-permiso')) {
+        if ($request->user()->can('ver-roles')) {
             return view('roles');
         }else{
             return redirect()->back();
@@ -26,22 +27,13 @@ class RolController extends Controller
 
     public function getRoles (Request $request)
     {
-        if ($request->user()->can('crear-permiso')) {
-            $roles = Rol::all();
-            return response()->json(['roles' => $roles]);
+        if ($request->user()->can('ver-roles')) {
+            $permisos = Permiso::all();
+            $roles = Rol::with('permisos')->get();
+            return response()->json(['permisos' => $permisos,'roles'=>$roles]);
         }else{
             return redirect()->back();
         }
-    }
-    
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -52,16 +44,24 @@ class RolController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request,[
-            'descrip' => 'required',
-            'slug' => 'required'
-        ]);
- 
-        $rol = Rol::create([
-            'slug' => $request->slug,
-            'descrip' => $request->descrip,
 
-        ]);    
+        if ($request->user()->can('crear-roles')) {
+
+            $this->validate($request,[
+                'descrip' => 'required',
+                'slug' => 'required'
+            ]);
+     
+            $rol = Rol::create([
+                'slug' => $request->slug,
+                'descrip' => $request->descrip,
+            ]);
+    
+                $rol->permisos()->attach($request->permisos);
+    
+            }else{
+                return redirect()->back();
+            }
     }
 
     /**
@@ -73,10 +73,21 @@ class RolController extends Controller
      */
     public function update(Request $request)
     {
-        $rol = Rol::findOrFail($request->id);
-        $rol->slug = $request->slug;
-        $rol->descrip = $request->descrip;
-        $rol->save();
+
+
+        if ($request->user()->can('actualizar-roles')) {
+
+            $rol = Rol::findOrFail($request->id);
+            $rol->slug = $request->slug;
+            $rol->descrip = $request->descrip;
+            $rol->save();
+            // $rol = Rol::where('slug',$request->roles)->get();
+            // dd($request->roles);
+            $rol->permisos()->sync($request->permisos);
+
+        }else{
+            return redirect()->back();
+        } 
     }
 
     /**
@@ -88,7 +99,9 @@ class RolController extends Controller
 
     public function destroy(Request $request)
     {
+        if ($request->user()->can('eliminar-roles')) {
         $rol = Rol::findOrFail($request->id);
         $rol->delete();
+        }
     }
 }

@@ -27,8 +27,14 @@ class RolesTableSeeder extends Seeder
 // fin roles
 // permisos permisos
 		$createPermisos = new Permiso();
-		$createPermisos->slug = 'ver-permisos';
-		$createPermisos->descrip = 'ver permisos';
+		$createPermisos->slug = 'vista-permisos';
+		$createPermisos->descrip = 'vista permisos';
+		$createPermisos->save();
+		$createPermisos->roles()->attach($admin_rol);
+
+		$createPermisos = new Permiso();
+		$createPermisos->slug = 'listar-permiso';
+		$createPermisos->descrip = 'Listar permisos';
 		$createPermisos->save();
 		$createPermisos->roles()->attach($admin_rol);
 
@@ -53,8 +59,14 @@ class RolesTableSeeder extends Seeder
 
 // permisos roles
 		$createPermisos = new Permiso();
-		$createPermisos->slug = 'ver-roles';
-		$createPermisos->descrip = 'ver roles';
+		$createPermisos->slug = 'vista-roles';
+		$createPermisos->descrip = 'vista roles';
+		$createPermisos->save();
+		$createPermisos->roles()->attach($admin_rol);
+
+		$createPermisos = new Permiso();
+		$createPermisos->slug = 'listar-permiso';
+		$createPermisos->descrip = 'Listar roles';
 		$createPermisos->save();
 		$createPermisos->roles()->attach($admin_rol);
 
@@ -80,12 +92,14 @@ class RolesTableSeeder extends Seeder
 // fin de los permisos de admin
 
 
-		$admin_ver_permisos = Permiso::where('slug','ver-permisos')->first();
+		$admin_ver_permisos = Permiso::where('slug','vista-permisos')->first();
+        $admin_listar_permisos = Permiso::where('slug','listar-permisos')->first();
 		$admin_crear_permisos = Permiso::where('slug','crear-permisos')->first();
         $admin_actualizar_permisos = Permiso::where('slug','actualizar-permisos')->first();
         $admin_eliminar_permisos = Permiso::where('slug','eliminar-permisos')->first();
 
-		$admin_ver_roles = Permiso::where('slug','ver-roles')->first();
+		$admin_ver_roles = Permiso::where('slug','vista-roles')->first();
+        $admin_listar_roles = Permiso::where('slug','listar-roles')->first();
 		$admin_crear_roles = Permiso::where('slug','crear-roles')->first();
         $admin_actualizar_roles = Permiso::where('slug','actualizar-roles')->first();
 		$admin_eliminar_roles = Permiso::where('slug','eliminar-roles')->first();
@@ -107,7 +121,7 @@ class RolesTableSeeder extends Seeder
 
 		$admin_rol = Rol::where('slug','admin')->first();
 		$superadmin_rol = Rol::where('slug', 'superadmin')->first();
-		$admin_per = Permiso::all();
+		$admin_per = Permiso::where('slug','crear-permisos','listar-permisos','actualizar-permisos','eliminar-permisos','vista-permisos','crear-roles','listar-roles','actualizar-roles','eliminar-roles','vista-roles')->first();
 		$superadmin_perm = Permiso::where('slug','edit-users')->first();
 
 		$admin = new User();

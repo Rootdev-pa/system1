@@ -69,8 +69,6 @@
                 checkRol:[],
                 roles:[],
                 check:[],
-
-
             }
         },
         created() {
@@ -80,7 +78,6 @@
             getPermisos: function () {
                 var urlIdeas = 'getpermisos';
                 axios.get(urlIdeas).then(response => {
-                    this.permisos = response.data.permisos
                     this.roles = response.data.roles
                 });
             },

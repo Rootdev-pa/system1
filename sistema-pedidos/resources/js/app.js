@@ -13,7 +13,7 @@ Vue.component('login', require('./components/Login.vue').default);
 Vue.component('register', require('./components/Register.vue').default);
 
 //componente para listar permisos
-Vue.component('lista-permisos', require('./components/ListaPermisos.vue').default);
+Vue.component('lista-permisos', require('./components/PermisosLista.vue').default);
 
 //componente padre de los roles
 Vue.component('roles', require('./components/Roles.vue').default);
