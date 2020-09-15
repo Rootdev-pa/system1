@@ -45,19 +45,19 @@ export default {
                 email:'',
                 password:'',
                 password_confirmation:'',
-                negocio_rol:'negocio',
+                negocio_rol:'',
             },
             errors:{name:''}
         }
     },
-    methods:{
+    methods: {
         saveForm(){
             axios.post('/register',this.form)
-            // .then(() =>{
-            // window.location.href = 'home';
-            // }).catch((error) =>{
-            //     this.errors = error.response.data.errors;
-            // });
+            .then(() =>{
+            window.location.href = 'home';
+            }).catch((error) =>{
+                this.errors = error.response.data.errors;
+            });
         }
     },
 }

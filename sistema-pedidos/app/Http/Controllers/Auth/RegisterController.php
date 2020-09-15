@@ -64,10 +64,23 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        dd($data['negocio_rol']);
+
+        $negocio_rol = Rol::where('slug', 'negocio')->first();
+		$negocio_per = Permiso::all();
+
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+        if($data['negocio_rol'] == $negocio_rol){
+            $user->roles()->attach($negocio_rol);
+            $user->permisos()->attach($negocio_per);
+        }
+
+        
+        return $user;
+
     }
 }

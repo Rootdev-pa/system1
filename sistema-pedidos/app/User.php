@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','plan',
     ];
 
     /**
@@ -52,6 +52,15 @@ class User extends Authenticatable
     public function negocio()
     {
         return $this->hasMany('App\Negocio','users_negocios');
+    }
+
+    public function subscribedToPlan($plan = null)
+    {
+        if($plan){
+            return $this->plan == $plan;
+        }
+
+        return $this->plan;
     }
 }
 

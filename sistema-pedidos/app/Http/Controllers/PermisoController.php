@@ -37,7 +37,6 @@ class PermisoController extends Controller
             return redirect()->back();
         }
     }
-
             // foreach(json_decode($request->input('permiso')) as $per)
         //     {
         //         $permiso = Permiso::create([
@@ -69,7 +68,7 @@ class PermisoController extends Controller
             'descrip' => $request->descrip,
         ]);
 
-            $permiso->roles()->attach($request->rol);
+        $permiso->roles()->attach($request->rol);
 
         }else{
             return redirect()->back();

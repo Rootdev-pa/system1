@@ -12,19 +12,23 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
-
-
 // roles
 		$admin_rol = new Rol();
 		$admin_rol->slug = 'admin';
 		$admin_rol->descrip = 'Administrador del sitema';
 		$admin_rol->save();
 
-		$superadmin_rol = new Rol();
+		$negocio_rol = new Rol();
+		$negocio_rol->slug = 'negocio';
+		$negocio_rol->descrip = 'Rol para el negocio subscrito y aprovado';
+		$negocio_rol->save();
+
+		$superadmin_rol = new Rol(); 
 		$superadmin_rol->slug = 'superadmin';
 		$superadmin_rol->descrip = 'Superadmin del sistema';
 		$superadmin_rol->save();
 // fin roles
+
 // permisos permisos
 		$createPermisos = new Permiso();
 		$createPermisos->slug = 'ver-permisos';
@@ -50,6 +54,32 @@ class RolesTableSeeder extends Seeder
 		$createPermisos->save();
 		$createPermisos->roles()->attach($admin_rol);
 // fin permisos
+
+// permisos permisos usuarios
+		$createPermisos = new Permiso();
+		$createPermisos->slug = 'ver-usuarios';
+		$createPermisos->descrip = 'ver usuarios';
+		$createPermisos->save();
+		$createPermisos->roles()->attach($admin_rol);
+
+		$createPermisos = new Permiso();
+		$createPermisos->slug = 'crear-usuarios';
+		$createPermisos->descrip = 'Crear usuarios';
+		$createPermisos->save();
+		$createPermisos->roles()->attach($admin_rol);
+
+		$createPermisos = new Permiso();
+		$createPermisos->slug = 'actualizar-usuarios';
+		$createPermisos->descrip = 'Actualizar usuarios';
+		$createPermisos->save();
+		$createPermisos->roles()->attach($admin_rol);
+
+		$createPermisos = new Permiso();
+		$createPermisos->slug = 'eliminar-usuarios';
+		$createPermisos->descrip = 'Eliminar usuarios';
+		$createPermisos->save();
+		$createPermisos->roles()->attach($admin_rol);
+// fin permisos usuarios
 
 // permisos roles
 		$createPermisos = new Permiso();
@@ -77,8 +107,34 @@ class RolesTableSeeder extends Seeder
 		$createPermisos->save();
 		$createPermisos->roles()->attach($admin_rol);
 // fin permisos roles
-// fin de los permisos de admin
 
+// permisos negocio
+		$createPermisos = new Permiso();
+		$createPermisos->slug = 'ver-negocio';
+		$createPermisos->descrip = 'ver negocio';
+		$createPermisos->save();
+		$createPermisos->roles()->attach($negocio_rol);
+
+		$createPermisos = new Permiso();
+		$createPermisos->slug = 'crear-negocio';
+		$createPermisos->descrip = 'Crear negocio';
+		$createPermisos->save();
+		$createPermisos->roles()->attach($negocio_rol);
+
+		$createPermisos = new Permiso();
+		$createPermisos->slug = 'actualizar-negocio';
+		$createPermisos->descrip = 'Actualizar negocio';
+		$createPermisos->save();
+		$createPermisos->roles()->attach($negocio_rol);
+
+		$createPermisos = new Permiso();
+		$createPermisos->slug = 'eliminar-negocio';
+		$createPermisos->descrip = 'Eliminar negocio';
+		$createPermisos->save();
+		$createPermisos->roles()->attach($negocio_rol);
+// fin permisos negocio
+
+// fin de los permisos de admin
 
 		$admin_ver_permisos = Permiso::where('slug','ver-permisos')->first();
 		$admin_crear_permisos = Permiso::where('slug','crear-permisos')->first();
@@ -90,9 +146,12 @@ class RolesTableSeeder extends Seeder
         $admin_actualizar_roles = Permiso::where('slug','actualizar-roles')->first();
 		$admin_eliminar_roles = Permiso::where('slug','eliminar-roles')->first();
 
+		$negocio_ver_negocio = Permiso::where('slug','ver-negocio')->first();
+		$negocio_crear_negocio = Permiso::where('slug','crear-negocio')->first();
+        $negocio_actualizar_negocio = Permiso::where('slug','actualizar-negocio')->first();
+		$negocio_eliminar_negocio = Permiso::where('slug','eliminar-negocio')->first();
+
         $superadmin_users = Permiso::where('slug', 'vista-usuarios')->first();
-
-
 		$admin_rol = Rol::where('slug','admin')->first();
 		$superadmin_rol = Rol::where('slug', 'superadmin')->first();
 
@@ -106,9 +165,8 @@ class RolesTableSeeder extends Seeder
 // fin permisos super admin
 
 		$admin_rol = Rol::where('slug','admin')->first();
-		$superadmin_rol = Rol::where('slug', 'superadmin')->first();
 		$admin_per = Permiso::all();
-		$superadmin_perm = Permiso::where('slug','edit-users')->first();
+		$regocio_rol = Rol::where('slug', 'negocio')->first();
 
 		$admin = new User();
 		$admin->name = 'Juan Perez';
@@ -118,12 +176,13 @@ class RolesTableSeeder extends Seeder
 		$admin->roles()->attach($admin_rol);
 		$admin->permisos()->attach($admin_per);
 
-		$superadmin = new User();
-		$superadmin->name = 'mike';
-		$superadmin->email = 'mike@gmail.com';
-		$superadmin->password = bcrypt('123456789');
-		$superadmin->save();
-		$superadmin->roles()->attach($superadmin_rol);
-		$superadmin->permisos()->attach($superadmin_perm);
+		$negocio = new User();
+		$negocio->name = 'kush';
+		$negocio->email = 'kush@gmail.com';
+		$negocio->plan = 'anual';
+		$negocio->password = bcrypt('123456789');
+		$negocio->save();
+		$negocio->roles()->attach($negocio_rol);
+		$negocio->permisos()->attach([$negocio_ver_negocio->id, $negocio_crear_negocio->id, $negocio_actualizar_negocio->id, $negocio_eliminar_negocio->id]);
     }
 }

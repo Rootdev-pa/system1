@@ -20,7 +20,12 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 
-Route::group(['middleware' => 'rol:admin'], function() {
+Route::group(['middleware' => ['rol:negocio','subs:anual']], function() {
+   
+    Route::get('/test', 'NegocioController@check');
+});
+
+Route::group(['middleware' => ['rol:admin'&&'rol:superadmin']], function() {
 
     //Roles
     Route::get('/roles', 'RolController@index');
@@ -35,5 +40,12 @@ Route::group(['middleware' => 'rol:admin'], function() {
     Route::post('/crear-permiso', 'PermisoController@store');
     Route::post('/permiso/actualizar', 'PermisoController@update');
     Route::post('/permiso/borrar', 'PermisoController@destroy');
+
+    //Usuarios
+    Route::get('/usuarios', 'UsuarioController@index');
+    Route::get('/getusuarios', 'UsuarioController@getUsuarios');
+    Route::post('/crear-usuario', 'UsuarioController@store');
+    Route::post('/usuario/actualizar', 'UsuarioController@update');
+    Route::post('/usuario/borrar', 'UsuarioController@destroy');
 
  });

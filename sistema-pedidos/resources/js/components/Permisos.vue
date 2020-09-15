@@ -27,6 +27,7 @@
                             Nombre
                         </label>
                     </div>
+                    <li style="list-style: none;">
 
                         <div v-for="rols in roles" :key="rols.index">
                             <div>
@@ -36,10 +37,11 @@
 
                                 <!-- <input type="checkbox"
                                 :value="rols.id" v-model="checkRol" number>-->
-                                <span>{{rols.slug}} </span> 
+                                <b>{{rols.descrip}}</b> <small>({{rols.slug}})</small>
                                 <br>
                             </div>
                         </div>
+                    </li>
                 </div>
                 <div class="">
                     <button

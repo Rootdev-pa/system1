@@ -102,6 +102,8 @@ class RolController extends Controller
         if ($request->user()->can('eliminar-roles')) {
         $rol = Rol::findOrFail($request->id);
         $rol->delete();
-        }
+        }else{
+            return redirect()->back();
+        } 
     }
 }
